@@ -53,8 +53,9 @@ def jsave(p, v):
 
 def done_set():
     d = set()
-    for f in ['_r49_s25_ledger.json', '_r49_s25_ledger3.json', '_r49_s25_ledger2.json']:
-        for x in jload(os.path.join(R, f), []):
+    import glob as _g
+    for p in _g.glob(os.path.join(R, '_r49_s25_ledger*.json')) + _g.glob(os.path.join(R, 'ledger*.json')):
+        for x in jload(p, []):
             if x.get('email'):
                 d.add(x['email'])
     return d
