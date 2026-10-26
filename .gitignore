@@ -1,0 +1,25 @@
+# runtime state
+state/
+out/
+logs/
+*.log
+*.jsonl
+*.tmp
+
+# secrets / captured sessions
+.env
+cookies*.json
+*accounts*.json
+*ledger*.json
+*claims*.json
+pending*.json
+
+# media
+*.mp4
+*.png
+*.jpg
+
+# python
+__pycache__/
+*.pyc
+.venv/
