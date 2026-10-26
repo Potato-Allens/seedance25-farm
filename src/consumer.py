@@ -61,6 +61,20 @@ def done_set():
     return d
 
 
+def cooled_domains():
+    import glob as _g
+    out = set()
+    now = time.time()
+    for p in _g.glob(os.path.join(R, '_r49_s25_login_down_*.json')):
+        try:
+            f = json.load(open(p, encoding='utf-8'))
+            if now - float(f.get('ts') or 0) < float(os.environ.get('S25_LOGIN_COOLDOWN', '1200')):
+                out.add(os.path.basename(p)[len('_r49_s25_login_down_'):-5])
+        except Exception:
+            pass
+    return out
+
+
 def main():
     if START_AT:
         hh, mm = [int(x) for x in START_AT.split(':')]
@@ -81,8 +95,10 @@ def main():
         done = done_set() | claims
         for _f in SKIP_CLAIMS:
             done |= set(jload(_f, []))
+        cool = cooled_domains()
         todo = [a for a in A if (a.get('credits') or 0) >= 40 and a.get('email') and a['email'] not in done
                 and att.get(a['email'], 0) < MAX_ATT
+                and a['email'].split('@')[-1] not in cool
                 and (zlib.crc32(a['email'].encode()) % SPLIT_MOD) == SPLIT_REM]
         if not todo:
             idle += 1
